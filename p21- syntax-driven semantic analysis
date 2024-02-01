@@ -1,0 +1,32 @@
+import nltk
+from nltk import pos_tag, word_tokenize
+from nltk.chunk import ne_chunk
+from nltk.tree import Tree
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
+def extract_noun_phrases(sentence):
+    words = word_tokenize(sentence)
+    tagged_words = pos_tag(words)
+    chunked_sentence = ne_chunk(tagged_words)
+
+    noun_phrases = []
+    for subtree in chunked_sentence:
+        if isinstance(subtree, Tree) and subtree.label() == 'NP':
+            # Extract noun phrases
+            noun_phrase = ' '.join(word for word, pos in subtree.leaves())
+            noun_phrases.append(noun_phrase)
+
+    return noun_phrases
+
+def main():
+    sentence = input("Enter a sentence: ")
+    noun_phrases = extract_noun_phrases(sentence)
+    
+    print("\nNoun Phrases:")
+    for noun_phrase in noun_phrases:
+        print(f"- {noun_phrase}")
+
+if __name__ == "__main__":
+    main()
